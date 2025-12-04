@@ -184,6 +184,15 @@ TEST(confirm_invariants) {
     BinarySearchTree<int> tree2 = tree;
 
     ASSERT_TRUE(tree.check_sorting_invariant());
+
+    tree2.insert(60);
+    ASSERT_TRUE(tree2.check_sorting_invariant());
+
+    BinarySearchTree<int> tree3;
+    ASSERT_TRUE(tree3.check_sorting_invariant());
+
+    tree3.insert(10);
+    ASSERT_TRUE(tree3.check_sorting_invariant());
 }
 
 
