@@ -195,6 +195,20 @@ TEST(confirm_invariants) {
     ASSERT_TRUE(tree3.check_sorting_invariant());
 }
 
+TEST(check_invariants) {
+    BinarySearchTree<int> tree;
+
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+
+    ASSERT_TRUE(tree.check_sorting_invariant());
+
+    auto it = tree.begin();
+    *it = 20;
+
+    ASSERT_FALSE(tree.check_sorting_invariant());
+}
 
 
 
