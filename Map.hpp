@@ -32,6 +32,11 @@ private:
 
   // A custom comparator
   class PairComp {
+    public:
+    bool operator()(const Pair_type &p1, const Pair_type &p2) const{
+      Key_compare less;
+     return (less(p1.first,p2.first)); 
+    }
   };
 
 public:
@@ -63,24 +68,20 @@ public:
 
   Map(const Map &map) : bst(map.bst) {}
 
-  Map &operator=(const &Map) {
+  Map &operator=(const Map& map) {
     bst = map.bst;
+    return *this; 
   }
-
-  ~Map() {
-    delete bst;
-  }
-
 
   // EFFECTS : Returns whether this Map is empty.
   bool empty() const {
-
+    return bst.empty(); 
   }
 
   // EFFECTS : Returns the number of elements in this Map.
   // NOTE : size_t is an integral type from the STL
   size_t size() const {
-
+    return bst.size();
   }
 
   // EFFECTS : Searches this Map for an element with a key equivalent
@@ -91,7 +92,8 @@ public:
   //       (key, value) pairs, you'll need to construct a dummy value
   //       using "Value_type()".
   Iterator find(const Key_type& k) const {
-    
+    Pair_type dummyPair(k , Value_type());
+    return bst.find(dummyPair);
   }
 
   // MODIFIES: this
@@ -111,7 +113,16 @@ public:
   //
   // HINT: http://www.cplusplus.com/reference/map/map/operator[]/
   Value_type& operator[](const Key_type& k) {
-
+      auto found_it = find(k);
+          if (found_it != end()) {
+              auto & number = (*found_it).second; //value
+              return number;
+          }
+          else {
+              insert({k,Value_type()});
+              Value_type & answer = (*find(k)).second;
+              return answer;
+          }
   }
 
   // MODIFIES: this
@@ -123,21 +134,29 @@ public:
   //           an iterator to the newly inserted element, along with
   //           the value true.
   std::pair<Iterator, bool> insert(const Pair_type &val) {
-
+     auto bleh = find(val.first);
+      if (bleh != end()) {      
+          return {bleh,false};
+      }
+      else {
+        bst.insert(val);
+        auto bleh2 = find(val.first);
+        return {bleh2,true};
+      }
   }
 
   // EFFECTS : Returns an iterator to the first key-value pair in this Map.
   Iterator begin() const {
-
+    return bst.begin();
   }
 
   // EFFECTS : Returns an iterator to "past-the-end".
   Iterator end() const {
-    
+    return bst.end();
   }
 
 private:
-   BinarySearchTree<Pair_type> bst;
+   BinarySearchTree<Pair_type, PairComp> bst;
 };
 
 // You may implement member functions below using an "out-of-line" definition
